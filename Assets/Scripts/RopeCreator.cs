@@ -10,7 +10,7 @@ public class RopeCreator : MonoBehaviour {
     Vector2 ropeEnds;
     LineRenderer line;
     public int index = 0;
-    float usedPaint = 0f;
+    public float usedPaint = 0f;
     float paintAvailable = 0f;
 
 	// Use this for initialization
@@ -22,20 +22,19 @@ public class RopeCreator : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         Vector3 paddlePos = creatorPaddle.transform.position;
-        if (paddlePos.x < ropeEnds.x)
+        if (usedPaint < paintAvailable)
         {
-            ropeEnds.x = paddlePos.x;
+            if (paddlePos.x < ropeEnds.x)
+            {
+                ropeEnds.x = paddlePos.x;
+            }
+            else if (paddlePos.x > ropeEnds.y)
+            {
+                ropeEnds.y = paddlePos.x;
+            }
         }
-        else if (paddlePos.x > ropeEnds.y)
-        {
-            ropeEnds.y = paddlePos.x;
-        }
-
         usedPaint = ropeEnds.y - ropeEnds.x;
-        if (usedPaint > paintAvailable)
-        {
-
-        }
+        
 
         line.SetPosition(0, new Vector3(ropeEnds.x, transform.position.y, 0));
         line.SetPosition(1, new Vector3(ropeEnds.y, transform.position.y, 0));
@@ -63,7 +62,7 @@ public class RopeCreator : MonoBehaviour {
 
         // Count variables and section length
         float offset = 0f;
-        float sectionLength = 0.25f;
+        float sectionLength = lastSection.transform.localScale.x - 0.05f;// 0.25f;
 
         // Calculate number of sections based on draw length
         float distance = ropeEnds.y - ropeEnds.x;
@@ -92,6 +91,7 @@ public class RopeCreator : MonoBehaviour {
         else
             ropeContainer.SetLayerRecursively(ropeContainer.gameObject, LayerMask.NameToLayer("Player2Ropes"));
 
+        creatorPaddle.paint -= usedPaint;
         Destroy(gameObject);
     }
 }

@@ -3,16 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Paddle))]
-public class PaddleInputHuman : MonoBehaviour {
-
-    public enum Player
-    {
-        Player1,
-        Player2
-    };
-
+public class PaddleInputHuman : PaddleInput
+{
     Paddle paddle;
-    public Player player;
     
     bool left = false;
     bool right = false;
@@ -29,7 +22,7 @@ public class PaddleInputHuman : MonoBehaviour {
 
         bool lastDrawRope = drawRope;
 
-        if (player == Player.Player1)
+        if (paddle.player == Utility.Player.Player1)
         {
             left = Input.GetKey(KeyCode.LeftArrow);
             right = Input.GetKey(KeyCode.RightArrow);

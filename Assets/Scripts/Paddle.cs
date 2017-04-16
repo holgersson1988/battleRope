@@ -4,13 +4,26 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Paddle : MonoBehaviour {
+
+
+    public Utility.Player player;
+
     public Transform muzzle;
     public RopeCreator ropeCreatorPrefab;
     public Color ropeColor;
     public float gravity;
     public Vector3 gravityDirection;
 
-    public float paint = 3f;
+    public float paintMax;
+    public float paint;
+    public float paintRefillRate;
+
+    public SpriteRenderer sprPaddle;
+    public SpriteRenderer sprPaint;
+    Vector3 paintSpriteScaleDefault;
+    Vector3 paintSpriteScale;
+
+    private Transform startPos;
 
     Rigidbody body;
     RopeCreator ropeCreator;
@@ -20,12 +33,49 @@ public class Paddle : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         body = GetComponent<Rigidbody>();
+        startPos = transform;
+
+        // Paint stats
+        paintMax = 5;
+        paintRefillRate = 2.5f;
+        paint = paintMax / 2f;
+
+        sprPaint.color = ropeColor;
+        sprPaddle.color = Color.black;
+
+        paintSpriteScaleDefault = sprPaint.transform.localScale;
+        paintSpriteScale.x = paintSpriteScaleDefault.x * (paint / paintMax);
+
+        if (player == Utility.Player.Player1)
+        {
+            sprPaint.color = FindObjectOfType<LevelManager>().player1Color;
+        }
+        else
+        {
+            sprPaint.color = FindObjectOfType<LevelManager>().player2Color;
+        }
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        if (ropeCreator == null)
+        {
+            sprPaint.transform.localScale = new Vector3(paintSpriteScaleDefault.x * (paint / paintMax), paintSpriteScaleDefault.y, paintSpriteScaleDefault.z);
+        }
+        else
+        {
+            sprPaint.transform.localScale = new Vector3(paintSpriteScaleDefault.x * ( (paint - ropeCreator.usedPaint) / paintMax), paintSpriteScaleDefault.y, paintSpriteScaleDefault.z);
+        }
+
+        // Refill paint
+        if (!drawing)
+        {
+            paint += paintRefillRate * Time.deltaTime;
+            if (paint > paintMax)
+                paint = paintMax;
+        }
+    }
 
     public void HandleInput(bool left, bool right, bool drawRope, bool stopDraw)
     {
@@ -53,5 +103,18 @@ public class Paddle : MonoBehaviour {
             ropeCreator = null;
             drawing = false;
         }
+    }
+
+    // Reset the Paddle to original color values and start position
+    public void ResetLevel()
+    {
+        Debug.Log("Paddle Reset");
+        transform.position = startPos.position;
+        transform.rotation = startPos.rotation;
+
+        body.position = startPos.position;
+        body.velocity = Vector3.zero;
+
+        paint = paintMax / 2f;
     }
 }

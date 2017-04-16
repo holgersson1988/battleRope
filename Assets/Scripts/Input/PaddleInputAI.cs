@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Paddle))]
-public class PaddleInputAI : MonoBehaviour {
+public class PaddleInputAI : PaddleInput {
 
     Paddle paddle;
     
