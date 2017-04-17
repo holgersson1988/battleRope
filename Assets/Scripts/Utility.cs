@@ -15,5 +15,10 @@ public static class Utility {
     public static Color neutralColor;
 
 
+    public static float DeltaTime()
+    {
+        return Time.deltaTime;
+    }
+
 
 }

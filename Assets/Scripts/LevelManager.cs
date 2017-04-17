@@ -9,13 +9,14 @@ public class LevelManager : MonoBehaviour {
 
     public Color player1Color;
     public Color player2Color;
+    public Color goalColor;
 
     public GoalArea goal1;
     public GoalArea goal2;
 
 
-    private int player1Score;
-    private int player2Score;
+    public int player1Score;
+    public int player2Score;
 
     
 
@@ -45,11 +46,8 @@ public class LevelManager : MonoBehaviour {
 
     public void ResetLevel()
     {
-
-        Debug.Log("Resetting level");
         Rope[] ropes = FindObjectsOfType<Rope>();
 
-        Debug.Log("Ropes: " + ropes.Length);
         int size = ropes.Length;
         for (int i = size-1; i >= 0; i--)
         {

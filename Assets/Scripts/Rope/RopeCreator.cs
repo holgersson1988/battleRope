@@ -47,22 +47,45 @@ public class RopeCreator : MonoBehaviour {
         paintAvailable = paddle.paint;
     }
 
-    public void Release()
-    {   
+    // Create a rope when released
+    public virtual void CreateRope()
+    {
+        Rope rope = CreateRopeContainer();
+        CreateRopeWithSectionType(rope, ropeSectionPrefab);
+        
+        // Customize rope. Different ropeCreators overrides this to add special sections or change the weight
+        CustomizeRope(rope);
+        rope.Setup(creatorPaddle.ropeColor, creatorPaddle.gravityDirection, creatorPaddle.gravity);
+
+        SetRopeLayer(rope);
+        creatorPaddle.paint -= usedPaint;
+        Destroy(gameObject);
+    }
+
+    protected virtual void CustomizeRope(Rope rope)
+    {
+        Destroy(rope.sections[0].GetComponent<ConfigurableJoint>());
+    }
+
+    protected Rope CreateRopeContainer()
+    {
         // Create Rope Container
         Rope ropeContainer = Instantiate(ropePrefab, transform.position, Quaternion.identity) as Rope;
         ropeContainer.name = "Rope " + index;
-        
+        return ropeContainer;
+    }
 
+    protected void CreateRopeWithSectionType(Rope rope, RopeSection ropePrefab)
+    {
         // Create First section and remove its joint
-        RopeSection lastSection = Instantiate(ropeSectionPrefab, new Vector3(ropeEnds.x, transform.position.y, 0), Quaternion.identity) as RopeSection;
-        Destroy(lastSection.GetComponent<ConfigurableJoint>());
+        RopeSection lastSection = Instantiate(ropePrefab, new Vector3(ropeEnds.x, transform.position.y, 0), Quaternion.identity) as RopeSection;
+
         // Connect to Rope Container
-        ropeContainer.AddSection(lastSection);
+        rope.AddSection(lastSection);
 
         // Count variables and section length
         float offset = 0f;
-        float sectionLength = lastSection.transform.localScale.x - 0.05f;// 0.25f;
+        float sectionLength = lastSection.transform.localScale.x - 0.05f;
 
         // Calculate number of sections based on draw length
         float distance = ropeEnds.y - ropeEnds.x;
@@ -74,24 +97,22 @@ public class RopeCreator : MonoBehaviour {
             offset += sectionLength;
 
             // Add new Section
-            RopeSection newSection = Instantiate(ropeSectionPrefab, new Vector3(ropeEnds.x + offset, transform.position.y, 0), Quaternion.identity) as RopeSection;
+            RopeSection newSection = Instantiate(ropePrefab, new Vector3(ropeEnds.x + offset, transform.position.y, 0), Quaternion.identity) as RopeSection;
             newSection.ConnectTo(lastSection);
 
             // Add to Rope Container
-            ropeContainer.AddSection(newSection);
+            rope.AddSection(newSection);
 
             // Reset for next iteration
             lastSection = newSection;
         }
+    }
 
-        ropeContainer.Setup(creatorPaddle.ropeColor, creatorPaddle.gravityDirection, creatorPaddle.gravity);
-
-        if (creatorPaddle.gameObject.layer == LayerMask.NameToLayer("Player1Paddle"))
-            ropeContainer.SetLayerRecursively(ropeContainer.gameObject, LayerMask.NameToLayer("Player1Ropes"));
+    protected void SetRopeLayer(Rope rope)
+    {
+        if (creatorPaddle.player == Utility.Player.Player1)
+            rope.SetLayerRecursively(rope.gameObject, LayerMask.NameToLayer("Player1Ropes"));
         else
-            ropeContainer.SetLayerRecursively(ropeContainer.gameObject, LayerMask.NameToLayer("Player2Ropes"));
-
-        creatorPaddle.paint -= usedPaint;
-        Destroy(gameObject);
+            rope.SetLayerRecursively(rope.gameObject, LayerMask.NameToLayer("Player2Ropes"));
     }
 }

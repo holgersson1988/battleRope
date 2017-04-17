@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Rope : MonoBehaviour {
 
-    List<RopeSection> sections;
+    public List<RopeSection> sections;
 
     private void Awake()
     {
@@ -26,11 +26,17 @@ public class Rope : MonoBehaviour {
         rs.transform.SetParent(transform);
     }
 
+    public void InsertSection(RopeSection rs, int index)
+    {
+        sections.Insert(index, rs);
+        rs.transform.SetParent(transform);
+    }
+
     public void Setup(Color col, Vector3 gravityDir, float grav)
     {
         foreach (RopeSection rs in sections)
         {
-            rs.GetComponent<LineRenderer>().material.SetColor("_EmissionColor", col);
+            rs.SetColor(col);
             rs.gravityDirection = gravityDir;
             rs.gravity = grav;
         }
@@ -53,6 +59,14 @@ public class Rope : MonoBehaviour {
             }
             SetLayerRecursively(child.gameObject, newLayer);
         }
+    }
+
+    public RopeSection GetSection(int i)
+    {
+        if (i >= 0 && i < sections.Count)
+            return sections[i];
+        else
+            return null;
     }
 
     private void OnDestroy()

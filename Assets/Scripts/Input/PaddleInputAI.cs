@@ -9,7 +9,7 @@ public class PaddleInputAI : PaddleInput {
     
     bool left = false;
     bool right = false;
-    bool drawRope = false;
+    int drawRope = -1;
     bool releaseRope = false;
 
     float time = 0;
@@ -22,7 +22,7 @@ public class PaddleInputAI : PaddleInput {
 
         left = false;
         right = false;
-        drawRope = false;
+        drawRope = -1;
     }
 	
 	// Update is called once per frame
@@ -46,8 +46,8 @@ public class PaddleInputAI : PaddleInput {
             }
         }
 
-        bool lastDrawRope = drawRope;
-        releaseRope = (lastDrawRope && !drawRope);
+        int lastDrawRope = drawRope;
+        releaseRope = (lastDrawRope != -1 && drawRope == -1);
 
         paddle.HandleInput(left, right, drawRope, releaseRope);
     }
