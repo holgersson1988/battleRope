@@ -50,8 +50,7 @@ public class RopeCreator : MonoBehaviour {
     // Create a rope when released
     public virtual void CreateRope()
     {
-        Rope rope = CreateRopeContainer();
-        CreateRopeWithSectionType(rope, ropeSectionPrefab);
+        Rope rope = CreateRopeWithSectionType(ropeSectionPrefab);
         
         // Customize rope. Different ropeCreators overrides this to add special sections or change the weight
         CustomizeRope(rope);
@@ -66,22 +65,19 @@ public class RopeCreator : MonoBehaviour {
     {
         Destroy(rope.sections[0].GetComponent<ConfigurableJoint>());
     }
+   
 
-    protected Rope CreateRopeContainer()
+    protected Rope CreateRopeWithSectionType(RopeSection sectionPrefab)
     {
         // Create Rope Container
         Rope ropeContainer = Instantiate(ropePrefab, transform.position, Quaternion.identity) as Rope;
         ropeContainer.name = "Rope " + index;
-        return ropeContainer;
-    }
 
-    protected void CreateRopeWithSectionType(Rope rope, RopeSection ropePrefab)
-    {
         // Create First section and remove its joint
-        RopeSection lastSection = Instantiate(ropePrefab, new Vector3(ropeEnds.x, transform.position.y, 0), Quaternion.identity) as RopeSection;
+        RopeSection lastSection = Instantiate(sectionPrefab, new Vector3(ropeEnds.x, transform.position.y, 0), Quaternion.identity) as RopeSection;
 
         // Connect to Rope Container
-        rope.AddSection(lastSection);
+        ropeContainer.AddSection(lastSection);
 
         // Count variables and section length
         float offset = 0f;
@@ -97,22 +93,25 @@ public class RopeCreator : MonoBehaviour {
             offset += sectionLength;
 
             // Add new Section
-            RopeSection newSection = Instantiate(ropePrefab, new Vector3(ropeEnds.x + offset, transform.position.y, 0), Quaternion.identity) as RopeSection;
+            RopeSection newSection = Instantiate(sectionPrefab, new Vector3(ropeEnds.x + offset, transform.position.y, 0), Quaternion.identity) as RopeSection;
             newSection.ConnectTo(lastSection);
 
             // Add to Rope Container
-            rope.AddSection(newSection);
+            ropeContainer.AddSection(newSection);
 
             // Reset for next iteration
             lastSection = newSection;
         }
+
+        return ropeContainer;
     }
 
     protected void SetRopeLayer(Rope rope)
     {
-        if (creatorPaddle.player == Utility.Player.Player1)
-            rope.SetLayerRecursively(rope.gameObject, LayerMask.NameToLayer("Player1Ropes"));
-        else
-            rope.SetLayerRecursively(rope.gameObject, LayerMask.NameToLayer("Player2Ropes"));
+        rope.SetLayerRecursively(rope.gameObject, LayerMask.NameToLayer("Ropes"));
+        //if (creatorPaddle.player == Utility.Player.Player1)
+        //    rope.SetLayerRecursively(rope.gameObject, LayerMask.NameToLayer("Player1Ropes"));
+        //else
+        //    rope.SetLayerRecursively(rope.gameObject, LayerMask.NameToLayer("Player2Ropes"));
     }
 }

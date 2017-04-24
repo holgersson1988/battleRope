@@ -90,6 +90,7 @@ public class Paddle : MonoBehaviour {
             body.AddForce(new Vector2(acc, 0f));
         }
 
+        // Start drawing
         if (drawRope != -1 && !drawing)
         {
             ropeCreator = Instantiate(ropeTypes[drawRope], muzzle.position, Quaternion.identity);
@@ -98,6 +99,7 @@ public class Paddle : MonoBehaviour {
             ropesCreated++;
             drawing = true;
         }
+        // Release rope
         else if (stopDraw && ropeCreator != null)
         {
             ropeCreator.CreateRope();
@@ -106,10 +108,20 @@ public class Paddle : MonoBehaviour {
         }
     }
 
+    public void CancelDrawing()
+    {
+        if (ropeCreator != null)
+        {
+            drawing = false;
+            Destroy(ropeCreator.gameObject);
+            ropeCreator = null;
+        }
+    }
+
     // Reset the Paddle to original color values and start position
     public void ResetLevel()
     {
-        
+        CancelDrawing();
         body.velocity = Vector3.zero;
         transform.position = startPos;
 

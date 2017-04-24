@@ -24,7 +24,7 @@ public class GoalArea : MonoBehaviour {
 	void Update () {
         lifeTime += Utility.DeltaTime();
 
-        sprGlow.color = new Color(sprGlow.color.r, sprGlow.color.g, sprGlow.color.b, ( (Mathf.Sin(lifeTime*glowSpeed) + 1f) / 2f ) + 0.5f);
+        sprGlow.color = new Color(sprGlow.color.r, sprGlow.color.g, sprGlow.color.b, ( (Mathf.Sin(lifeTime*glowSpeed) + 1f) / 2f ) * 0.2f + 0.5f);
 	}
 
     private void OnTriggerEnter(Collider other)

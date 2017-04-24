@@ -20,5 +20,15 @@ public static class Utility {
         return Time.deltaTime;
     }
 
+    /// <summary>
+    /// Returns the Vector3 that points from "from" to "to"
+    /// </summary>
+    /// <returns>The to.</returns>
+    /// <param name="from">From.</param>
+    /// <param name="to">To.</param>
+    public static Vector3 FromTo(Vector3 from, Vector3 to)
+    {
+        return to - from;
+    }
 
 }

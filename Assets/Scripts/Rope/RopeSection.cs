@@ -67,7 +67,7 @@ public class RopeSection : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate () {
         // Apply gravity
-        body.AddForce(gravityDirection * gravity * Time.deltaTime);
+        body.AddForce(gravityDirection * gravity*body.mass * Time.deltaTime);
     }
 
     public void ConnectTo(RopeSection rs)

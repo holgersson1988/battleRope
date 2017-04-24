@@ -5,6 +5,7 @@ using UnityEngine;
 public class Rope : MonoBehaviour {
 
     public List<RopeSection> sections;
+    public float sectionLength;
 
     private void Awake()
     {
@@ -59,14 +60,6 @@ public class Rope : MonoBehaviour {
             }
             SetLayerRecursively(child.gameObject, newLayer);
         }
-    }
-
-    public RopeSection GetSection(int i)
-    {
-        if (i >= 0 && i < sections.Count)
-            return sections[i];
-        else
-            return null;
     }
 
     private void OnDestroy()
