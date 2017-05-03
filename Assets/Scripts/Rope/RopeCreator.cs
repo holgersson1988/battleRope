@@ -6,12 +6,14 @@ public class RopeCreator : MonoBehaviour {
 
     public Rope ropePrefab;
     public RopeSection ropeSectionPrefab;
+    public float initialPaintCost;
     Paddle creatorPaddle;
     Vector2 ropeEnds;
     LineRenderer line;
     public int index = 0;
     public float usedPaint = 0f;
     float paintAvailable = 0f;
+    
 
 	// Use this for initialization
 	void Start () {
@@ -33,7 +35,7 @@ public class RopeCreator : MonoBehaviour {
                 ropeEnds.y = paddlePos.x;
             }
         }
-        usedPaint = ropeEnds.y - ropeEnds.x;
+        usedPaint = initialPaintCost + ropeEnds.y - ropeEnds.x;
         
 
         line.SetPosition(0, new Vector3(ropeEnds.x, transform.position.y, 0));

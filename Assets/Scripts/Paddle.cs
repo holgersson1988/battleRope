@@ -37,8 +37,7 @@ public class Paddle : MonoBehaviour {
         startPos = transform.position;
 
         // Paint stats
-        paintMax = 5;
-        paintRefillRate = 2.5f;
+        paintRefillRate = 8.0f;
         paint = paintMax / 2f;
 
         sprPaint.color = ropeColor;
@@ -94,10 +93,19 @@ public class Paddle : MonoBehaviour {
         if (drawRope != -1 && !drawing)
         {
             ropeCreator = Instantiate(ropeTypes[drawRope], muzzle.position, Quaternion.identity);
-            ropeCreator.SetupRopeCreator(muzzle.position.x, this);
-            ropeCreator.index = ropesCreated;
-            ropesCreated++;
-            drawing = true;
+            if (paint >= ropeCreator.initialPaintCost)
+            {
+                ropeCreator.SetupRopeCreator(muzzle.position.x, this);
+                ropeCreator.index = ropesCreated;
+                ropesCreated++;
+                drawing = true;
+            }
+            else
+            {
+                CancelDrawing();
+            }
+            
+            
         }
         // Release rope
         else if (stopDraw && ropeCreator != null)

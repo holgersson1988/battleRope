@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public static class Utility {
-    
+
+    public static float LINE_SECTION_WIDTH = 0.45f;
+
     public enum Player
     {
         Player1, 

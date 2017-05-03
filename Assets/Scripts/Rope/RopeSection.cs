@@ -12,9 +12,12 @@ public class RopeSection : MonoBehaviour {
 
     public SectionType type;
 
+    public ConfigurableJoint joint1;
+    public ConfigurableJoint joint2;
+
     Rigidbody body;
     BoxCollider col;
-    ConfigurableJoint joint;
+    //ConfigurableJoint joint;
 
     LineRenderer line;
 
@@ -29,7 +32,7 @@ public class RopeSection : MonoBehaviour {
         body = GetComponent<Rigidbody>();
         col = GetComponent<BoxCollider>();
 
-        joint = GetComponent<ConfigurableJoint>();
+        //joint = GetComponent<ConfigurableJoint>();
 
         line = GetComponent<LineRenderer>();
 
@@ -53,6 +56,8 @@ public class RopeSection : MonoBehaviour {
                 line.SetPosition(2, middle);
                 line.SetPosition(3, Vector3.Lerp(middle, end, 0.5f));
                 line.SetPosition(4, end);
+
+                //transform.rotation = Quaternion.LookRotation()
             }
             else if (type == SectionType.Weight)
             {
@@ -77,7 +82,11 @@ public class RopeSection : MonoBehaviour {
         rs.nextSection = this;
 
         // Connect the Joint
-        joint.connectedBody = rs.GetComponent<Rigidbody>();
+        if (joint1 && joint2)
+        {
+            joint1.connectedBody = rs.GetComponent<Rigidbody>();
+            joint2.connectedBody = rs.GetComponent<Rigidbody>();
+        }
         //spring.connectedBody = rb;
     }
 

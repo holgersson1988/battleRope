@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class MovePattern : MonoBehaviour {
 
-    public List<Transform> points;
+    public List<Vector3> points;
     public bool isLooping;
     public float speed;
     public int index;
     public int travelDirection;
 
-    public int nextIndex;
+    public Color gizmoColor = Color.white;
+
+    private int nextIndex;
     private Rigidbody rb;
     
 
 	void Start () {
-        transform.position = points[index].position;
+        transform.position = points[index];
         rb = GetComponent<Rigidbody>();
         Debug.Assert(rb, "No rigidbody on moving object");
 
@@ -25,15 +27,16 @@ public class MovePattern : MonoBehaviour {
 
     private void OnDrawGizmos()
     {
-        foreach (Transform point in points)
+        Gizmos.color = gizmoColor;
+        foreach (Vector3 point in points)
         {
-            Gizmos.DrawSphere(point.transform.position, 0.25f);
+            Gizmos.DrawSphere(point, 0.25f);
         }
     }
 
     void FixedUpdate () {
 
-        Vector3 nextPosition = points[nextIndex].position;
+        Vector3 nextPosition = points[nextIndex];
         // Find direction to next point
         Vector3 direction = Utility.FromTo(transform.position, nextPosition).normalized;
 
@@ -47,35 +50,28 @@ public class MovePattern : MonoBehaviour {
             // Move to target and reset speed
             rb.MovePosition(nextPosition);
 
-            // Find the next index
+            // Find new indices
             index += travelDirection;
-            if (index < 0)
-            {
+
+            if (index < 0){
                 index = points.Count - 1;
-            }
-            else if (index > points.Count - 1)
-            {
+            }else if (index > points.Count - 1){
                 index = 0;
             }
+            
             nextIndex = index + travelDirection;
-
-            // Find new indices
             if (nextIndex >= points.Count || nextIndex < 0)
             {
                 // If looping go to the other end of the list
-                if (isLooping)
-                {
-                    if (nextIndex < 0)
-                    {
+                if (isLooping){
+                    if (nextIndex < 0){
                         nextIndex = points.Count - 1;
-                    }
-                    else
-                    {
+                    }else{
                         nextIndex = 0;
                     }
                 }
-                else
-                {
+                // If NOT looping
+                else{
                     travelDirection *= -1;
                     nextIndex = index + travelDirection;
                 }

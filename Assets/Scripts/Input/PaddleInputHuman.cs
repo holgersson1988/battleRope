@@ -1,4 +1,4 @@
-﻿    using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,8 +19,8 @@ public class PaddleInputHuman : PaddleInput
 
     KeyCode leftKey2 = KeyCode.A;
     KeyCode rightKey2 = KeyCode.D;
-    KeyCode drawKey1_2 = KeyCode.LeftControl;
-    KeyCode drawKey2_2 = KeyCode.LeftShift;
+    KeyCode drawKey1_2 = KeyCode.F;
+    KeyCode drawKey2_2 = KeyCode.G;
 
 
     // Use this for initialization
