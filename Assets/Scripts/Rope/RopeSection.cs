@@ -12,8 +12,7 @@ public class RopeSection : MonoBehaviour {
 
     public SectionType type;
 
-    public ConfigurableJoint joint1;
-    public ConfigurableJoint joint2;
+    public ConfigurableJoint joint;
 
     Rigidbody body;
     BoxCollider col;
@@ -82,10 +81,9 @@ public class RopeSection : MonoBehaviour {
         rs.nextSection = this;
 
         // Connect the Joint
-        if (joint1 && joint2)
+        if (joint)
         {
-            joint1.connectedBody = rs.GetComponent<Rigidbody>();
-            joint2.connectedBody = rs.GetComponent<Rigidbody>();
+            joint.connectedBody = rs.GetComponent<Rigidbody>();
         }
         //spring.connectedBody = rb;
     }
